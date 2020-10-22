@@ -6,21 +6,128 @@ class Table extends Component {
         super()
         this.state = {
             displayedRestaurants: [],
-            restaurantsPage1: [],
-            restaurantsPage2: [],
-            restaurantsPage3: [], 
-            restaurantsPage4: [],
-            currentPage: 1,
             filteredInput: ""
         }
-        this.handleSearchFilter = this.handleSearchFilter.bind(this)
+
+        this.filterBySearch = this.filterBySearch.bind(this);
+
+        this.handleSearchFilter = this.handleSearchFilter.bind(this);
+
+        this.parseInput = this.parseInput.bind(this);
+        this.toggleErrorMessage = this.toggleErrorMessage.bind(this);
+        this.changePage = this.changePage.bind(this);
+        this.updateTable = this.updateTable.bind(this)
+
     }
+
+    // Search Functions
+    filterBySearch = async () => {
+            // Filter Array Based on Associated Select Element Value
+            let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
+                let isContained = false;
+                // Convert String Into Array and Filter
+                const restaurantGenres = restaurant.genre.split(',');
+                // Convert First Letter to Upper Case
+                const searchValue = this.state.filteredInput.charAt(0).toUpperCase() + this.state.filteredInput.slice(1).toLowerCase();
+                restaurantGenres.map(genre => {
+                    if (genre.includes(searchValue)) {
+                        return isContained = true
+                    }
+                })
+                if (isContained) {
+                    return restaurant
+                } else if (restaurant.city.includes(this.parseInput())) {
+                    return restaurant
+                } else {
+                    return restaurant.name.includes(this.parseInput())
+                }
+            });
+            await this.setState({
+                availableRestaurants: restaurantsFiltered
+            })
+            await this.updateTable()
+            this.toggleErrorMessage(this.state.availableRestaurants)
+
+        };
+
+    // Handler Functions
     handleSearchFilter(event) {
-        console.log(event.target.value);
         this.setState({
             [event.target.name]: event.target.value
         })
+        if (event.key === 'Enter') {
+                this.filterBySearch();
+            };
+            // Only Works When Using Backspace On Individual Letters
+            if (this.state.filteredInput.length < 1) {
+                this.resetResults();
+            };
+    };
+
+    // Helper Functions
+    resetResults = async () => {
+        await this.setState({
+            availableRestaurants: this.state.originalRestaurants
+        })
+        this.updateTable()
+    };
+
+    parseInput = () => {
+        const inputArray = this.state.filteredInput.split(' ');
+        let inputArrayStringified = ''
+        inputArray.map(string => {
+            const capitalString = string.charAt(0).toUpperCase() + string.slice(1);
+            inputArrayStringified = `${inputArrayStringified} ${capitalString}`
+        });
+        return inputArrayStringified.slice(1)
+    };
+
+    toggleErrorMessage = (array) => {
+        const message = document.getElementById('message')
+        array.length !== 0 ?
+            message.setAttribute('style', 'visibility: hidden')
+            :
+            message.setAttribute('style', 'visibility: visible')
+    };
+
+    changePage = (event) => {
+        const page = event.target.value;
+        console.log(typeof page);
+        switch ( page) {
+            case "2": 
+                this.setState({
+                    displayedRestaurants: this.state.restaurantsPage2
+                });
+                break;
+                case "3": 
+                this.setState({
+                    displayedRestaurants: this.state.restaurantsPage3
+                });
+                break;
+                case "4": 
+                this.setState({
+                    displayedRestaurants: this.state.restaurantsPage4
+                });
+                break;
+            default: 
+                this.setState({
+                    displayedRestaurants: this.state.restaurantsPage1
+                })
+        }
+    };
+
+    updateTable = async () => {
+        await this.setState({
+            restaurantsPage1: this.state.availableRestaurants.slice(0, 10),
+            restaurantsPage2: this.state.availableRestaurants.slice(11, 20),
+            restaurantsPage3: this.state.availableRestaurants.slice(21, 30),
+            restaurantsPage4: this.state.availableRestaurants.slice(31, 40),
+        })
+        this.setState({
+            displayedRestaurants: this.state.restaurantsPage1
+        })
     }
+
     //  Lifecycle Methods
     componentDidMount() {
         fetch('https://code-challenge.spectrumtoolbox.com/api/restaurants', {
@@ -53,92 +160,6 @@ class Table extends Component {
             })
     }
     render() {
-        // Search Functions
-        const filterBySearch = () => {
-            // Filter Array Based on Associated Select Element Value
-            let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
-                let isContained = false;
-                // Convert String Into Array and Filter
-                const restaurantGenres = restaurant.genre.split(',');
-                restaurantGenres.map(genre => {
-                    // Convert First Letter to Upper Case
-                    const searchValue = this.state.filteredInput.charAt(0).toUpperCase() + this.state.filteredInput.slice(1).toLowerCase();
-                    if (genre.includes(searchValue)) {
-                        return isContained = true
-                    }
-                })
-                if (isContained) {
-                    return restaurant
-                } else if (restaurant.city.includes(parseInput())) {
-                    return restaurant
-                } else {
-                    return restaurant.name.includes(parseInput())
-                }
-            });
-            this.setState({
-                availableRestaurants: restaurantsFiltered
-            })
-            toggleErrorMessage(this.state.availableRestaurants)
-
-        };
-
-        //  Handler Functions
-        // handleSearchFilter = (event) => {
-        //     console.log(event.target.value);
-        //     this.setState({
-        //         filteredInput: event.target.value
-        //     });
-        //     if (event.key === 'Enter') {
-        //         filterBySearch();
-        //     };
-        //     // Only Works When Using Backspace On Individual Letters
-        //     if (this.state.filteredInput.length < 1) {
-        //         resetResults();
-        //     };
-            
-        // };
-
-        const handleStateSelect = (event) => {
-            this.setState({
-                stateSelect: event.target.value
-            });
-        };
-
-        const handleGenreSelect = (event) => {
-            this.setState({
-                genreSelect: event.target.value
-            })
-        };
-        // Helper Functions
-        const resetResults = () => {
-            this.setState({
-                availableRestaurants: this.state.originalRestaurants
-            })
-        };
-
-        const parseInput = () => {
-            const inputArray = this.state.filteredInput.split(' ');
-            let inputArrayStringified = ''
-            inputArray.map(string => {
-                const capitalString = string.charAt(0).toUpperCase() + string.slice(1);
-                inputArrayStringified = `${inputArrayStringified} ${capitalString}`
-            });
-            return inputArrayStringified.slice(1)
-        };
-
-        const toggleErrorMessage = (array) => {
-            const message = document.getElementById('message')
-            array.length !== 0 ?
-                message.setAttribute('style', 'visibility: hidden')
-                :
-                message.setAttribute('style', 'visibility: visible')
-        };
-
-        const changePage = (event) => {
-            this.setState({
-                currentPage: event.target.value
-            })
-        };
         return(
             <div>
                 <div>
@@ -152,12 +173,13 @@ class Table extends Component {
                                 <input 
                                 name="filteredInput"
                                 onChange={this.handleSearchFilter} 
+                                onKeyDown={this.handleSearchFilter} 
                                 id='search-input' 
                                 placeholder='Search by Name, City, or Genre' 
                                 value={this.state.filteredInput}
                                 />
-                                <button onClick={filterBySearch}>Search</button>
-                                <button onClick={resetResults}>Reset Restaurants</button>
+                                <button onClick={this.filterBySearch}>Search</button>
+                                <button onClick={this.resetResults}>Reset Restaurants</button>
                             </div>
                         </div>
                     </div>
@@ -167,7 +189,11 @@ class Table extends Component {
                         <div id='filter-interactions'>
                             <div id='state-interactions'>
                                 <label for='state-select'>By State:</label>
-                                <select id='state-list' onChange={handleStateSelect}>
+                                <select 
+                                id='state-list' 
+                                onChange={this.handleSearchFilter}
+                                name="state-select"
+                                >
                                     <option value='1'>Choose a State...</option>
                                     {/* retreive States array[50] from state and create an option element for each State */}
                                     {tableData.states.map((state, index) => (
@@ -177,7 +203,9 @@ class Table extends Component {
                             </div>
                             <div id='genre-interactions'>
                                 <label for='genre-select'>By Genre:</label>
-                                <select id='genre-list' name='genre-select' onChange={handleGenreSelect}>
+                                <select id='genre-list' 
+                                name='genre-select' 
+                                onChange={this.handleSearchFilter}>
                                     <option value='1'>Choose a Genre...</option>
                                     {/* retreive genres array from state and create an option element for each genre */}
                                     {tableData.genres.map((genre, index) => (
@@ -237,10 +265,10 @@ class Table extends Component {
                     </table>
                 </div>
                 <div id='page-buttons'>
-                    <button onClick={changePage} value={1}>1</button>
-                    <button onClick={changePage} value={2}>2</button>
-                    <button onClick={changePage} value={3}>3</button>
-                    <button onClick={changePage} value={4}>4</button>
+                    <button onClick={this.changePage} value={1}>1</button>
+                    <button onClick={this.changePage} value={2}>2</button>
+                    <button onClick={this.changePage} value={3}>3</button>
+                    <button onClick={this.changePage} value={4}>4</button>
                 </div>
             </div>        )
     }
