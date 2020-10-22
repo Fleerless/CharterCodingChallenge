@@ -307,7 +307,7 @@ class Table extends Component {
                                 onChange={this.handleSearchFilters}
                                 name="stateSelect"
                                 >
-                                    <option value='1'>Choose a State...</option>
+                                    <option value='1'>All States</option>
                                     {/* retreive States array[50] from state and create an option element for each State */}
                                     {tableData.states.map((state, index) => (
                                         <option value={state} key={index}>{state}</option>
@@ -320,7 +320,7 @@ class Table extends Component {
                                 id='genre-list' 
                                 name='genreSelect' 
                                 onChange={this.handleSearchFilters}>
-                                    <option value='1'>Choose a Genre...</option>
+                                    <option value='1'>All Genres</option>
                                     {/* retreive genres array from state and create an option element for each genre */}
                                     {tableData.genres.map((genre, index) => (
                                         <option value={genre} key={index}>{genre}</option>
