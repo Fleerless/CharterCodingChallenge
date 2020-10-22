@@ -10,6 +10,8 @@ class Table extends Component {
         }
 
         this.filterBySearch = this.filterBySearch.bind(this);
+        this.filterByState = this.filterByState.bind(this);
+        this.filterByGenre = this.filterByGenre.bind(this);
 
         this.handleSearchFilter = this.handleSearchFilter.bind(this);
 
@@ -20,7 +22,7 @@ class Table extends Component {
 
     }
 
-    // Search Functions
+    // Filter Functions
     filterBySearch = async () => {
             // Filter Array Based on Associated Select Element Value
             let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
@@ -50,26 +52,69 @@ class Table extends Component {
 
         };
 
-    // Handler Functions
-    handleSearchFilter(event) {
-        this.setState({
-            [event.target.name]: event.target.value
+    filterByState = async () => {
+    // Filter Array Based on Associated Select Element Value
+    let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
+        console.log(restaurant.state, this.state.stateSelect);
+        return restaurant.state === this.state.stateSelect
+    });
+    await this.setState({
+        availableRestaurants: restaurantsFiltered
+    }) 
+    this.updateTable()
+    this.toggleErrorMessage(restaurantsFiltered)
+
+}
+
+    filterByGenre = () => {
+    let restaurantsFiltered = this.state.restaurants.filter(restaurant => {
+        let isContained = false;
+        // Convert String Into Array and Filter
+        const restaurantGenres = restaurant.genre.split(',');
+        restaurantGenres.map(genre => {
+            if (genre === this.statete.genreSelect) {
+                return isContained = true
+            }
         })
+        if (isContained) {
+            return restaurant
+        }
+    });
+    this.updateRestaurants(restaurantsFiltered)
+    this.toggleErrorMessage(this.state.availableRestaurants)
+}
+
+    // Handler Functions
+    handleSearchFilter = async (event) => {
+        const name = event.target.name;
+        await this.setState({
+            [name]: event.target.value
+        })
+        // Adds Enter key funtionality
         if (event.key === 'Enter') {
                 this.filterBySearch();
             };
-            // Only Works When Using Backspace On Individual Letters
-            if (this.state.filteredInput.length < 1) {
-                this.resetResults();
-            };
+        // Only Works When Using Backspace On Individual Letters
+        if (name === this.state.filteredInput && this.state.filteredInput.length < 1) {
+            this.resetResults();
+        };
+        // Filters by State in that dropdown is selected
+        if (name === "stateSelect") {
+            this.filterByState()
+        }
     };
 
     // Helper Functions
     resetResults = async () => {
         await this.setState({
-            availableRestaurants: this.state.originalRestaurants
-        })
-        this.updateTable()
+            availableRestaurants: this.state.originalRestaurants,
+            stateSelect: "",
+            genreSelect: ""
+        });
+        this.updateTable();
+        this.toggleErrorMessage(this.state.availableRestaurants);
+        document.getElementById('state-list').selectedIndex = 0;
+        document.getElementById('genre-list').selectedIndex = 0;       
     };
 
     parseInput = () => {
@@ -192,7 +237,7 @@ class Table extends Component {
                                 <select 
                                 id='state-list' 
                                 onChange={this.handleSearchFilter}
-                                name="state-select"
+                                name="stateSelect"
                                 >
                                     <option value='1'>Choose a State...</option>
                                     {/* retreive States array[50] from state and create an option element for each State */}
@@ -203,8 +248,9 @@ class Table extends Component {
                             </div>
                             <div id='genre-interactions'>
                                 <label for='genre-select'>By Genre:</label>
-                                <select id='genre-list' 
-                                name='genre-select' 
+                                <select 
+                                id='genre-list' 
+                                name='genreSelect' 
                                 onChange={this.handleSearchFilter}>
                                     <option value='1'>Choose a Genre...</option>
                                     {/* retreive genres array from state and create an option element for each genre */}
