@@ -20,7 +20,8 @@ class Table extends Component {
         this.parseInput = this.parseInput.bind(this);
         this.toggleErrorMessage = this.toggleErrorMessage.bind(this);
         this.changePage = this.changePage.bind(this);
-        this.updateTable = this.updateTable.bind(this)
+        this.updateTable = this.updateTable.bind(this);
+        this.toggleDisplayedButtons = this.toggleDisplayedButtons.bind(this);
 
     }
 
@@ -97,17 +98,21 @@ class Table extends Component {
         });
         // Adds Enter key funtionality
         if (event.key === 'Enter') {
-                this.filterBySearch();
+                await this.filterBySearch();
+                this.toggleDisplayedButtons();
             };
         // Resets restaurants in input firld is cleared 
         if (name === this.state.filteredInput && value.length < 1) {
-            this.resetResults();
+            await this.resetResults();
+            this.toggleDisplayedButtons();
         };
         // Filters by State or Genre in that dropdown is selected
         if (name === "stateSelect") {
-            this.filterByState()
+            await this.filterByState();
+            this.toggleDisplayedButtons()
         } else if (name === "genreSelect") {
-            this.filterByGenre()
+            await this.filterByGenre();
+            this.toggleDisplayedButtons()
         };
         // Allows filters to be removed by unselecting them
         this.searchAfterFilterReset(name, value)
@@ -191,6 +196,25 @@ class Table extends Component {
             displayedRestaurants: this.state.restaurantsPage1
         })
     }
+
+    toggleDisplayedButtons = () => {
+        const button1 = document.getElementById('button1');
+        const button2 = document.getElementById('button2');
+        const button3 = document.getElementById('button3');
+        const button4 = document.getElementById('button4');
+        if (this.state.restaurantsPage1.length < 1) {
+            button1.style.display = 'none'
+        } 
+        if (this.state.restaurantsPage2.length < 1) {
+            button2.style.display = 'none'
+        }
+        if (this.state.restaurantsPage3.length < 1) {
+            button3.style.display = 'none'
+        }
+        if (this.state.restaurantsPage4.length < 1) {
+            button4.style.display = 'none'
+        }
+    }
     
 
     //  Lifecycle Methods
@@ -251,6 +275,7 @@ class Table extends Component {
 
                     <div id='filter-elements'>
                         <h3>Filters</h3>
+                        <h5>Return drop-down filters to "Choose..." option to deactivate filter</h5>
                         <div id='filter-interactions'>
                             <div id='state-interactions'>
                                 <label for='state-select'>By State:</label>
@@ -331,10 +356,10 @@ class Table extends Component {
                     </table>
                 </div>
                 <div id='page-buttons'>
-                    <button onClick={this.changePage} value={1}>1</button>
-                    <button onClick={this.changePage} value={2}>2</button>
-                    <button onClick={this.changePage} value={3}>3</button>
-                    <button onClick={this.changePage} value={4}>4</button>
+                    <button id='button1' onClick={this.changePage} value={1}>1</button>
+                    <button id='button2' onClick={this.changePage} value={2}>2</button>
+                    <button id='button3' onClick={this.changePage} value={3}>3</button>
+                    <button id='button4' onClick={this.changePage} value={4}>4</button>
                 </div>
             </div>        )
     }
