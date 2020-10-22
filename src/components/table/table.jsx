@@ -12,8 +12,10 @@ class Table extends Component {
         this.filterBySearch = this.filterBySearch.bind(this);
         this.filterByState = this.filterByState.bind(this);
         this.filterByGenre = this.filterByGenre.bind(this);
+        this.searchAfterFilterReset = this.searchAfterFilterReset.bind(this);
 
-        this.handleSearchFilter = this.handleSearchFilter.bind(this);
+
+        this.handleSearchFilters = this.handleSearchFilters.bind(this);
 
         this.parseInput = this.parseInput.bind(this);
         this.toggleErrorMessage = this.toggleErrorMessage.bind(this);
@@ -87,25 +89,28 @@ class Table extends Component {
 }
 
     // Handler Functions
-    handleSearchFilter = async (event) => {
+    handleSearchFilters = async (event) => {
         const name = event.target.name;
+        const value = event.target.value;
         await this.setState({
-            [name]: event.target.value
-        })
+            [name]: value
+        });
         // Adds Enter key funtionality
         if (event.key === 'Enter') {
                 this.filterBySearch();
             };
-        // Only Works When Using Backspace On Individual Letters
-        if (name === this.state.filteredInput && this.state.filteredInput.length < 1) {
+        // Resets restaurants in input firld is cleared 
+        if (name === this.state.filteredInput && value.length < 1) {
             this.resetResults();
         };
-        // Filters by State in that dropdown is selected
+        // Filters by State or Genre in that dropdown is selected
         if (name === "stateSelect") {
             this.filterByState()
         } else if (name === "genreSelect") {
             this.filterByGenre()
-        }
+        };
+        // Allows filters to be removed by unselecting them
+        this.searchAfterFilterReset(name, value)
     };
 
     // Helper Functions
@@ -120,6 +125,16 @@ class Table extends Component {
         document.getElementById('state-list').selectedIndex = 0;
         document.getElementById('genre-list').selectedIndex = 0;       
     };
+    
+    searchAfterFilterReset = async (name, value) => {
+        if (name === "stateSelect" && value === "1"){
+            await this.setState({
+                availableRestaurants: this.state.originalRestaurants,
+            })
+            this.filterByGenre()
+            this.filterBySearch()
+        }
+    }
 
     parseInput = () => {
         const inputArray = this.state.filteredInput.split(' ');
@@ -176,6 +191,7 @@ class Table extends Component {
             displayedRestaurants: this.state.restaurantsPage1
         })
     }
+    
 
     //  Lifecycle Methods
     componentDidMount() {
@@ -221,8 +237,8 @@ class Table extends Component {
                             <div id='search-interactions'>
                                 <input 
                                 name="filteredInput"
-                                onChange={this.handleSearchFilter} 
-                                onKeyDown={this.handleSearchFilter} 
+                                onChange={this.handleSearchFilters} 
+                                onKeyDown={this.handleSearchFilters} 
                                 id='search-input' 
                                 placeholder='Search by Name, City, or Genre' 
                                 value={this.state.filteredInput}
@@ -240,7 +256,7 @@ class Table extends Component {
                                 <label for='state-select'>By State:</label>
                                 <select 
                                 id='state-list' 
-                                onChange={this.handleSearchFilter}
+                                onChange={this.handleSearchFilters}
                                 name="stateSelect"
                                 >
                                     <option value='1'>Choose a State...</option>
@@ -255,7 +271,7 @@ class Table extends Component {
                                 <select 
                                 id='genre-list' 
                                 name='genreSelect' 
-                                onChange={this.handleSearchFilter}>
+                                onChange={this.handleSearchFilters}>
                                     <option value='1'>Choose a Genre...</option>
                                     {/* retreive genres array from state and create an option element for each genre */}
                                     {tableData.genres.map((genre, index) => (
