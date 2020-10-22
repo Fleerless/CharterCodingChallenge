@@ -1,13 +1,235 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background: #ffffff;
+  font-size: 1.5rem;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+/* COLORS 
+dark-blue = 143156 
+medium-blue = 00629B
+light-blue = 0899D6 
+orange = FAA41A 
+dark-orange = D88A0D
+table = F8F8F8
+table-color = 333333
+footer = 464646
+*/
+
+input {
+  width: 20%;
+}
+
+button {
+  margin: 0 0.5rem;
+}
+
+input {
+  margin: 0 0.5rem;
+}
+
+table {
+  width: 90%;
+  padding: 2.5% 5%;
+  background-color: #f8f8f8;
+  color: #333333;
+}
+
+tr {
+  height: 3rem;
+}
+
+select {
+  margin-left: 1rem;
+  height: 2rem;
+  margin-bottom: 0.5rem;
+  padding: 0 0.5rem;
+}
+
+button {
+  background-color: #faa41a;
+  color: #ffffff;
+  border: 2px solid #faa41a;
+  border-radius: 1rem;
+  height: 2rem;
+  padding: 0 2rem;
+  font-weight: bolder;
+  font-size: 1.25rem;
+}
+
+button:hover {
+  background-color: #d88a0d;
+  border: 2px solid #d88a0d;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+}
+
+h2,
+h3,
+h5,
+h6 {
+  display: flex;
+  justify-content: center;
+}
+
+th {
+    color: #143156;
+}
+
+td {
+  margin: 0 1rem;
+}
+
+tr {
+  border: 1px solid black;
+}
+
+a {
+  margin-top: 1rem;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+a:hover {
+  cursor: pointer;
+}
+
+footer {
+  display: flex;
+  justify-content: center;
+  background-color: #464646;
+  color: #ffffff;
+  padding: 1.5rem 0;
+  margin: 2rem 0;
+}
+
+#root {
+  width: 100%;
+}
+
+#table {
+  display: flex;
+  justify-content: center;
+}
+
+#message-div {
+    display: flex;
+    justify-content: center;
+    color: red;
+    margin: 1rem 0;
+    
+}
+
+#name {
+  width: 25%;
+}
+
+#city {
+  width: 10%;
+}
+
+#state {
+  width: 10%;
+}
+
+#phone {
+  width: 10%;
+}
+
+#genre {
+  width: 45%;
+}
+
+#header-elements {
+  flex-direction: column;
+}
+
+#search-elements {
+  display: flex;
+  flex-direction: column;
+  background-color: #00629B;
+  color: #ffffff;
+}
+
+#search-interactions {
+    display: flex;
+    justify-content: center;
+}
+
+#search-input {
+  width: 12.5%;
+}
+
+#filter-elements {
+  display: flex;
+  flex-direction: column;
+  background-color: #00629B;
+  color: #ffffff;
+}
+
+#filter-interactions {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 2rem;
+}
+
+#state-interactions {
+  margin-right: 2rem;
+}
+
+#genre-interactions {
+  margin-left: 2rem;
+}
+
+#page-buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+#footer-elements {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.table-data {
+  display: flex;
+  justify-content: center;
+}
+
+.footer-top-row {
+    display: flex;
+    flex-direction: row;
+}
+.footer-bottom-row {
+    display: flex;
+    justify-content: center;
+}
+
+.light-blue {
+  color: #0899d6;
+}
+
+.divider {
+    height: 2rem;
+    width: 2px;
+    background-color: #ffffff;
+    margin: 0 1rem;
 }

@@ -44,15 +44,15 @@ class Table extends Component {
                 } else if (restaurant.city.includes(this.parseInput())) {
                     return restaurant
                 } else {
-                    return restaurant.name.includes(this.parseInput())
+                    return restaurant.name.includes(this.parseInput());
                 }
             });
             await this.setState({
                 availableRestaurants: restaurantsFiltered
-            })
-            await this.updateTable()
-            this.toggleErrorMessage(this.state.availableRestaurants)
-
+            });
+            await this.updateTable();
+            this.toggleErrorMessage(this.state.availableRestaurants);
+            this.toggleDisplayedButtons();
         };
 
     filterByState = async () => {
@@ -66,7 +66,7 @@ class Table extends Component {
     this.updateTable()
     this.toggleErrorMessage(this.state.availableRestaurants)
 
-}
+};
 
     filterByGenre = async () => {
     let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
@@ -87,7 +87,7 @@ class Table extends Component {
     }) 
     this.updateTable()
     this.toggleErrorMessage(this.state.availableRestaurants)
-}
+};
 
     // Handler Functions
     handleSearchFilters = async (event) => {
@@ -99,10 +99,9 @@ class Table extends Component {
         // Adds Enter key funtionality
         if (event.key === 'Enter') {
                 await this.filterBySearch();
-                this.toggleDisplayedButtons();
             };
         // Resets restaurants in input firld is cleared 
-        if (this.state.filteredInput.length < 1) {
+        if (name === 'filteredInput' && this.state.filteredInput.length < 1) {
             await this.resetResults();
             this.toggleDisplayedButtons();
         };
@@ -128,17 +127,35 @@ class Table extends Component {
         this.updateTable();
         this.toggleErrorMessage(this.state.availableRestaurants);
         document.getElementById('state-list').selectedIndex = 0;
-        document.getElementById('genre-list').selectedIndex = 0;       
+        document.getElementById('genre-list').selectedIndex = 0;
+        this.toggleDisplayedButtons();       
     };
     
     searchAfterFilterReset = async (name, value) => {
-        if (name === "stateSelect" && value === "1"){
+        if (name === 'genreSelect' && value === '1' && this.state.stateSelect === '1'){
             await this.setState({
                 availableRestaurants: this.state.originalRestaurants,
-            })
-            this.filterByGenre()
+            });
             this.filterBySearch()
-        }
+            } else if (name === 'genreSelect' && value === '1'){
+                await this.setState({
+                    availableRestaurants: this.state.originalRestaurants,
+                });
+                this.filterByState()
+                this.filterBySearch()
+            }
+        if (name === 'stateSelect' && value === '1' && this.state.stateSelect === '1'){
+            await this.setState({
+                availableRestaurants: this.state.originalRestaurants,
+            });
+            this.filterBySearch()
+            } else if (name === 'stateSelect' && value === '1'){
+                await this.setState({
+                    availableRestaurants: this.state.originalRestaurants,
+                });
+                this.filterByGenre()
+                this.filterBySearch()
+            };
     }
 
     parseInput = () => {
@@ -161,7 +178,6 @@ class Table extends Component {
 
     changePage = (event) => {
         const page = event.target.value;
-        console.log(typeof page);
         switch ( page) {
             case "2": 
                 this.setState({
@@ -204,15 +220,27 @@ class Table extends Component {
         const button4 = document.getElementById('button4');
         if (this.state.restaurantsPage1.length < 1) {
             button1.style.display = 'none'
-        } 
+        }
+        if (this.state.restaurantsPage1.length > 0) {
+            button1.style.display = 'initial'
+        }
         if (this.state.restaurantsPage2.length < 1) {
             button2.style.display = 'none'
+        }
+        if (this.state.restaurantsPage2.length > 0) {
+            button2.style.display = 'initial'
         }
         if (this.state.restaurantsPage3.length < 1) {
             button3.style.display = 'none'
         }
+        if (this.state.restaurantsPage3.length > 0) {
+            button3.style.display = 'initial'
+        }
         if (this.state.restaurantsPage4.length < 1) {
             button4.style.display = 'none'
+        }
+        if (this.state.restaurantsPage4.length > 0) {
+            button4.style.display = 'initial'
         }
     }
     
@@ -251,11 +279,7 @@ class Table extends Component {
     render() {
         return(
             <div>
-                <div>
-                    <div id='header-elements'>
-                        <h2>Welcome to RestaurantSearch<span class='light-blue'>!</span></h2>
-                        <h5>The best restaurant search engine in this repository<span class='light-blue'>!</span></h5>
-                        <h6>Or your money back<span class='light-blue'>!</span></h6>
+               
                         <div id='search-elements'>
                             <h5>Please type your search</h5>
                             <div id='search-interactions'>
@@ -271,7 +295,6 @@ class Table extends Component {
                                 <button onClick={this.resetResults}>Reset Restaurants</button>
                             </div>
                         </div>
-                    </div>
 
                     <div id='filter-elements'>
                         <h3>Filters</h3>
@@ -309,7 +332,6 @@ class Table extends Component {
                     <div id='message-div'>
                         <span id='message' style={{ visibility: 'hidden' }}>There are no results. Please choose another selection</span>
                     </div>
-                </div>
                 <div id='table'>
                     <table>
                         <thead>
