@@ -55,32 +55,34 @@ class Table extends Component {
     filterByState = async () => {
     // Filter Array Based on Associated Select Element Value
     let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
-        console.log(restaurant.state, this.state.stateSelect);
         return restaurant.state === this.state.stateSelect
     });
     await this.setState({
         availableRestaurants: restaurantsFiltered
     }) 
     this.updateTable()
-    this.toggleErrorMessage(restaurantsFiltered)
+    this.toggleErrorMessage(this.state.availableRestaurants)
 
 }
 
-    filterByGenre = () => {
-    let restaurantsFiltered = this.state.restaurants.filter(restaurant => {
+    filterByGenre = async () => {
+    let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
         let isContained = false;
         // Convert String Into Array and Filter
         const restaurantGenres = restaurant.genre.split(',');
         restaurantGenres.map(genre => {
-            if (genre === this.statete.genreSelect) {
+            if (genre === this.state.genreSelect) {
                 return isContained = true
             }
-        })
+        });
         if (isContained) {
             return restaurant
         }
     });
-    this.updateRestaurants(restaurantsFiltered)
+    await this.setState({
+        availableRestaurants: restaurantsFiltered
+    }) 
+    this.updateTable()
     this.toggleErrorMessage(this.state.availableRestaurants)
 }
 
@@ -101,6 +103,8 @@ class Table extends Component {
         // Filters by State in that dropdown is selected
         if (name === "stateSelect") {
             this.filterByState()
+        } else if (name === "genreSelect") {
+            this.filterByGenre()
         }
     };
 
