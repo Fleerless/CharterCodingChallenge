@@ -102,7 +102,7 @@ class Table extends Component {
                 this.toggleDisplayedButtons();
             };
         // Resets restaurants in input firld is cleared 
-        if (name === this.state.filteredInput && value.length < 1) {
+        if (this.state.filteredInput.length < 1) {
             await this.resetResults();
             this.toggleDisplayedButtons();
         };
