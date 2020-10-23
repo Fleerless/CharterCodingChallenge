@@ -1,7 +1,7 @@
 # Welcome to RestaurantSearch!
 
 This repo was created to start my interview process with Charter. 
-Or you can visit the [deployed](https://admiring-davinci-32e3bb.netlify.app/) application.
+
 
 ## Challenge
 
@@ -14,7 +14,8 @@ I was given 48 hours to meet a set of requirements:
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory, you can run the code as below.
+Or you can visit the [deployed](https://admiring-davinci-32e3bb.netlify.app/) application.
 
 ### `yarn start`
 
