@@ -5,7 +5,7 @@ Or you can visit the [deployed](https://admiring-davinci-32e3bb.netlify.app/) ap
 
 ## Challenge
 
-I was given 4 days to meet a set of requirements:
+I was given 48 hours to meet a set of requirements:
 * Pull and organize data from an API
 * Ability to filter restaurants by State and genre
 * Ability to search for names, cities, or genres
