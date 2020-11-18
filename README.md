@@ -12,6 +12,8 @@ I was given 48 hours to meet a set of requirements:
 * Paginate the results
 * Ability to turn filters off
 
+* And test it with Cypress
+
 ## Available Scripts
 
 In the project directory, you can run the code as below.
