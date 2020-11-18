@@ -63,6 +63,41 @@ describe('Search Page', () => {
             cy.get('#button2')
                 .should('not.be.visible')
         })
+    })
 
+    context('Filter functionality', () => {
+        it('Filters table on state select', () => {
+            cy.get('#state-list')
+                .select('TX')
+                
+            cy.get('tbody').children()
+                .should('have.length', 4)
+            cy.get('#button2')
+                .should('not.be.visible')
+        })
+
+        it('Filters table on genre select', () => {
+            cy.get('#state-list')
+                .select('TX')
+            cy.get('#genre-list')
+                .select('French')
+
+            cy.get('tbody').children()
+                .should('have.length', 1)
+            cy.get('#button2')
+                .should('not.be.visible')
+        })
+
+        it('Should reset the table results when input fields are reset', () => {
+            cy.get('#state-list')
+                .select('1')
+            cy.get('#genre-list')
+                .select('1')
+
+            cy.get('tbody').children()
+                .should('have.length', 10)
+            cy.get('#button4')
+                .should('be.visible')
+        })
     })
 })
