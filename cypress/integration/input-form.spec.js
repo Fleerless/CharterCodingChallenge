@@ -2,33 +2,67 @@ const { getByAltText } = require("@testing-library/react");
 const { describe } = require("mocha");
 
 describe('Search Page', () => {
+    // Run this command before each it statement
     beforeEach(() => {
+        // Visit the root of the base URL defined in cypress.json
         cy.visit('/')
     })
+    // Define a context to group similar tests
     context('Page load', () => {
         it('Populates dropdowns on load', () => {
             cy.get('#state-list').children()
                 .should('have.length', 60)
-    
+
             cy.get('#genre-list').children()
                 .should('have.length', 23)
-            
         })
 
-        it('Populates table with 10 results', () => {
+        it('Populates table with only 10 results', () => {
+            cy.get('tbody').children()
+                .should('have.length', 10)
+                .and('be.visible')
+        })
+
+        it('Allows user to type a search', () => {
+            const searchText = 'Steak';
+            cy.get('#search-input')
+                .type(searchText)
+                .should('have.value', searchText)
+        })
+    })
+
+    context('Search functionality', () => {
+        it('Filters table on Search button click', () => {
+            const searchText = 'eclectic'
+            cy.get('#search-input')
+                .type(searchText)
+            cy.get('#search-button')
+                .click()
+
+            cy.get('tbody').children()
+                .should('have.length', 1)
+            cy.get('#button2')
+                .should('not.be.visible')
+        })
+
+        it('Resets the table when input field is cleared', () => {
+            cy.get('#search-input')
+                .clear()
+            
             cy.get('tbody').children()
                 .should('have.length', 10)
         })
 
-        it('Allows user to type a search', () => {
-            const itemText = 'Steak';
+        it('Filters table by search on Enter key press', () => {
+            const searchText = 'steak'
             cy.get('#search-input')
-                .type(itemText)
-                .should('have.value', itemText)
-        })
-    })
+                .type(searchText).focus().type('{enter}')
 
-    context('Functionality', () => {
+            cy.get('tbody').children()
+                .should('have.length', 10)
+            cy.get('#button2')
+                .should('not.be.visible')
+        })
 
     })
 })

@@ -291,8 +291,8 @@ class Table extends Component {
                                 placeholder='Search by Name, City, or Genre' 
                                 value={this.state.filteredInput}
                                 />
-                                <button onClick={this.filterBySearch}>Search</button>
-                                <button onClick={this.resetResults}>Reset Restaurants</button>
+                                <button onClick={this.filterBySearch} id='search-button'>Search</button>
+                                <button onClick={this.resetResults} id='reset-button'>Reset Restaurants</button>
                             </div>
                         </div>
 
@@ -346,7 +346,7 @@ class Table extends Component {
                         <tbody>
                             {/* retreive displayedRestaurants array[0-9] from state and create a table row for each restaurant */}
                             {this.state.displayedRestaurants.map((restaurant, index) => (
-                                <tr key={index}>
+                                <tr id={`t-row-${index + 1}`} key={index}>
                                     <td>
                                         <div class='table-data'>
                                             {restaurant.name}
