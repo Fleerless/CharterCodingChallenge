@@ -1,4 +1,3 @@
-const { getByAltText } = require("@testing-library/react");
 const { describe } = require("mocha");
 
 describe('Search Page', () => {
@@ -88,7 +87,7 @@ describe('Search Page', () => {
                 .should('not.be.visible')
         })
 
-        it('Should reset the table results when input fields are reset', () => {
+        it('Resets the table results when input fields are reset', () => {
             cy.get('#state-list')
                 .select('1')
             cy.get('#genre-list')
