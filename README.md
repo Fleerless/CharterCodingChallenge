@@ -11,13 +11,12 @@ I was given 48 hours to meet a set of requirements:
 * Ability to search for names, cities, or genres
 * Paginate the results
 * Ability to turn filters off
-
 * And test it with Cypress
 
 ## Available Scripts
 
 In the project directory, you can run the code as below.
-Or you can visit the [deployed](https://admiring-davinci-32e3bb.netlify.app/) application.
+Or you can visit the [deployed](https://competent-albattani-00a9ba.netlify.app/) application.
 
 ### `yarn start`
 

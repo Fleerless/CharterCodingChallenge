@@ -6,14 +6,16 @@ class Table extends Component {
         super()
         this.state = {
             displayedRestaurants: [],
-            filteredInput: ""
+            filteredInput: "",
+            isTyped: false,
+            isGenreFiltered: false,
+            isStateFiltered: false
         }
 
         this.filterBySearch = this.filterBySearch.bind(this);
         this.filterByState = this.filterByState.bind(this);
         this.filterByGenre = this.filterByGenre.bind(this);
         this.searchAfterFilterReset = this.searchAfterFilterReset.bind(this);
-
 
         this.handleSearchFilters = this.handleSearchFilters.bind(this);
 
@@ -56,37 +58,46 @@ class Table extends Component {
         };
 
     filterByState = async () => {
-    // Filter Array Based on Associated Select Element Value
-    let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
-        return restaurant.state === this.state.stateSelect
-    });
-    await this.setState({
-        availableRestaurants: restaurantsFiltered
-    }) 
-    this.updateTable()
-    this.toggleErrorMessage(this.state.availableRestaurants)
+        // Reset results and refilter if the user has already selected a Genre filter
+        if (this.state.isGenreFiltered) {
+            await this.setState({
+                availableRestaurants: this.state.originalRestaurants
+            })
+            this.filterByGenre()
+        }
+        // Filter Array Based on Associated Select Element Value
+        let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
+            return restaurant.state === this.state.stateSelect
+        });
+        await this.setState({
+            availableRestaurants: restaurantsFiltered,
+            isStateFiltered: true
+        }) 
+        this.updateTable()
+        this.toggleErrorMessage(this.state.availableRestaurants)
 
 };
 
     filterByGenre = async () => {
-    let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
-        let isContained = false;
-        // Convert String Into Array and Filter
-        const restaurantGenres = restaurant.genre.split(',');
-        restaurantGenres.map(genre => {
-            if (genre === this.state.genreSelect) {
-                return isContained = true
+        let restaurantsFiltered = this.state.availableRestaurants.filter(restaurant => {
+            let isContained = false;
+            // Convert String Into Array and Filter
+            const restaurantGenres = restaurant.genre.split(',');
+            restaurantGenres.map(genre => {
+                if (genre === this.state.genreSelect) {
+                    return isContained = true
+                }
+            });
+            if (isContained) {
+                return restaurant
             }
         });
-        if (isContained) {
-            return restaurant
-        }
-    });
-    await this.setState({
-        availableRestaurants: restaurantsFiltered
-    }) 
-    this.updateTable()
-    this.toggleErrorMessage(this.state.availableRestaurants)
+        await this.setState({
+            availableRestaurants: restaurantsFiltered,
+            isGenreFiltered: true
+        }) 
+        this.updateTable()
+        this.toggleErrorMessage(this.state.availableRestaurants)
 };
 
     // Handler Functions
@@ -100,8 +111,14 @@ class Table extends Component {
         if (event.key === 'Enter') {
                 await this.filterBySearch();
             };
+        // Set isTyped to true after input field has been typed
+        if (this.state.filteredInput.length > 0) {
+            await this.setState({
+                isTyped: true
+            })
+        }
         // Resets restaurants in input firld is cleared 
-        if (name === 'filteredInput' && this.state.filteredInput.length < 1) {
+        if (name === 'filteredInput' && this.state.filteredInput.length < 1 && this.state.isTyped ) {
             await this.resetResults();
             this.toggleDisplayedButtons();
         };
@@ -122,7 +139,8 @@ class Table extends Component {
         await this.setState({
             availableRestaurants: this.state.originalRestaurants,
             stateSelect: "",
-            genreSelect: ""
+            genreSelect: "",
+            isTyped: false
         });
         this.updateTable();
         this.toggleErrorMessage(this.state.availableRestaurants);
